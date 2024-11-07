@@ -22,7 +22,7 @@ const parser= new pdfParser(this,1)
 //importing embeddings function
 
 const {createEmbeddings}=require('./createEmbeddings')
-const { writeHeapSnapshot } = require('v8')
+
 
 
 //connecting database
@@ -44,19 +44,42 @@ app.get('/',async(req,res)=>{
 app.post('/load-document',async(req,res)=>{
     try{
         parser.loadPDF('./nfnlabs.pdf')
-        res.json('successfully loaded')
+        //whenever the parser called event triggered 'pdfparser_dataready'
+parser.on("pdfParser_dataReady",async(data)=>{
+    await fileSystem.writeFileSync('./nfn.txt',parser.getRawTextContent())
+
+   const textFile= await fileSystem.readFileSync('./nfn.txt','utf-8')
+    const splitContent=textFile.split('/n')
+    const connection= await MongoDB.MongoClient.connect(process.env.MONGO_URI)
+    const db= connection.db('nodeRAG')
+    const collection= db.collection('docs')
+
+    
+
+    for(let splittext of splitContent){
+     const embedding=   await createEmbeddings(splittext)
+
+     //I'm inserting this embeddings in the mongoDB database
+     await collection.insertOne({
+        text:splittext,
+        embedding:embedding.data[0].embedding
+     })
+     
+     console.log(embedding)
+    }
+    await connection.close()
+    res.json('done')
+})
+       
 
     }catch(error){
         console.log(error)
         res.status(500).json({message:'error'})
     }
 })
-//whenever the parser called event triggered 'pdfparser_dataready'
-parser.on("pdfParser_dataReady",async(data)=>{
-    await fileSystem.writeFileSync('nfn.txt',parser.getRawTextContent())
-})
+
 ///sending a text to convert this number
-app.get('/embeddings',async(req,res)=>{
+app.get('/embeddings',async(req,res)=>{//checking whether embedding is working or not
     try{
         const embedding= await createEmbeddings('Hello world')
         res.json(embedding)
