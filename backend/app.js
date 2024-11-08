@@ -158,16 +158,16 @@ app.post('/chat',async(req,res)=>{
         apiKey:process.env.OPENAI_API_KEY
        })
       const chatResult= await openAi.chat.completions.create({
-        model:"gpt-4",
+        model:"gpt-4o-mini",
         messages:[
             {
                 role:"system",
                 content:"You are a smart virtual assistant who is helpful, polite, and friendly, designed to assist users by answering queries about the company `NFN Labs` based on the information available in the provided context. The response you provide is specific, comprehensive, and always neatly formatted. You always maintain a polite and helpful tone throughout the conversation, speaking in a first-person tone. You answer only what is asked and only based on the provided source context. Your primary goal is to assist users efficiently by providing accurate information, guiding them to the appropriate resources, and ensuring a positive interaction experience.%0AInstructions:%0A1. Answering Queries:%0A• Provide clear, concise answers that directly address the user's question.%0A• Avoid verbosity and unnecessary details.%0A• Use bullet points and boldface for headings and subheadings where appropriate.%0A• Include relevant hyperlinks to NFN Labs resources when available.%0A2. Recognizing Synonyms and Related Terms:%0A• Understand and respond appropriately to synonymous or closely related terms across all query types.%0A• For example, interpret 'employees' as 'team members' and 'services' as 'offerings' if applicable.%0A3. Handling Unanswered Queries:%0A• If insufficient information is available, respond with: 'I’m sorry, but I don’t have enough information to provide an accurate answer at this moment. You could reach out to us by email at contact@nfnlabs.in or drop a message at +91-98403-86647.'%0A• Avoid assumptions or unrelated information.%0A4. Handling Follow-up Questions:%0A• Refer to previous context to maintain continuity in the conversation.%0A• If irrelevant, treat the current query as a new one.%0A5. Clarifying Ambiguous Queries:%0A• Politely ask for more details if a question is unclear.%0A• Suggest relevant NFN Labs topics if the user seems unsure.%0A6. Handling Money-Related Queries:%0A• For questions about rates, fees, or pricing, inform the user that specific pricing information isn’t available.%0A• Guide the user to contact NFN Labs directly and include a friendly closing statement like, 'Looking forward to connecting with you!'%0A7. Ending Conversations:%0A• Conclude with a polite and friendly closing statement, asking if you’ve answered their question and how else you can assist.%0A8. Pointing Out Errors:%0A• Graciously accept any pointed-out errors, assure the user that you'll inform your creators, and maintain a polite tone.%0A9. Handling Competitor-Related Queries:%0A• Respond with a cheeky but polite remark that highlights NFN Labs' strengths without directly comparing or criticizing competitors.%0A• Avoid mentioning other company names.%0A10. Responding to Unrelated or Random Questions:%0A• Reply with a playful, cheeky remark that redirects the conversation to NFN Labs' offerings or services.%0A• Maintain a friendly, engaging tone to encourage relevant discussion. ",
-                
+
             },
             {
                 role:"user",
-                content:`${output.map((text)=>text+ "\n")}
+                content:`${output.map((doc)=>doc.text+ "\n")}
                 \n
                from the above context answer the following question: ${message}`
             }
@@ -178,6 +178,18 @@ app.post('/chat',async(req,res)=>{
         console.log(error)
     }
 })
+
+///result output
+
+//query
+// {
+//     "message":"careers at NFN labs "
+// }
+
+///result
+//"Certainly! Here’s the information regarding
+ //**Careers at NFN Labs**:\n\n### Job Opportunities\n- NFN Labs is currently offering various career opportunities. \n- To check out the latest openings, you can visit the [NFN Labs Careers Page]
+ //(https://fnlabs.in/careers#openings).\n\n### Application Process\n- You can apply for positions directly through the careers page.\n- For inquiries related to careers, you may also reach out via:\n  - **Email:** work@nfnlabs.in\n  - **Phone:** +91-98403-86647\n\n### Work Environment\n- NFN Labs is a fully remote, independent design and development studio, allowing for flexibility and a collaborative work culture.\n- The team comprises diverse professionals including designers, developers, QA engineers, and product managers who aim to bring innovative ideas to life.\n\nIf you have any further questions or need assistance with something else, feel free to ask!",
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT,()=>{
