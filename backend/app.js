@@ -37,6 +37,12 @@ const {createEmbeddings}=require('./createEmbeddings')
 //   - **Interface Design (UI):** Developing visual and interactive aspects.\n  - **Interaction Design (IXD):** Shaping interactive components for better user experiences.\n\n- **Product Development**\n 
 //    - **Mobile App Development:** Crafting applications for iOS and Android.\n  - **Web App Development:** Developing web-based applications with a focus on responsive design.\n  - **Backend Development:** Building server-side software and architecture.\n\n- **Other Services**\n  - **CMS Customization:** Enhancing functionality and user experience of content management systems.\n  - **Payment and Subscription Processing:** Setting up various payment solutions.\n  - **New Age Platforms:** Utilizing cutting-edge technologies for innovative digital solutions.\n  - **Marketing Websites:** Creating visually appealing and strategically structured websites.\n\nFor more details on their services, you can visit [NFN Labs](https://fnlabs.in/). \n\nIf you have any further questions or need assistance with something else, feel free to ask!"
 
+//{
+ //   "message":"is NFN labs using react? "
+//}
+
+//output
+//"**Yes, NFN Labs is using React.** They utilize ReactJS as part of their web app development services, focusing on browser compatibility and interactive user interfaces.\n\nIf you have any more questions or need further assistance, feel free to ask!"
 //connecting database
 app.get('/',async(req,res)=>{
     try{
