@@ -25,7 +25,17 @@ const parser= new pdfParser(this,1)
 
 const {createEmbeddings}=require('./createEmbeddings')
 
-
+///result of the application
+// {
+//     "message":"services offering at NFN labs "
+// }
+//output retrieval
+// "**Services Offered at NFN Labs**
+// \n\nNFN Labs provides a comprehensive range of services to take your products from concept
+//  to implementation. Here’s a breakdown of their offerings:\n\n- **Ideation**\n- **Product 
+//  Design**\n  - **User Experience (UX):** Focus on usability and accessibility.\n 
+//   - **Interface Design (UI):** Developing visual and interactive aspects.\n  - **Interaction Design (IXD):** Shaping interactive components for better user experiences.\n\n- **Product Development**\n 
+//    - **Mobile App Development:** Crafting applications for iOS and Android.\n  - **Web App Development:** Developing web-based applications with a focus on responsive design.\n  - **Backend Development:** Building server-side software and architecture.\n\n- **Other Services**\n  - **CMS Customization:** Enhancing functionality and user experience of content management systems.\n  - **Payment and Subscription Processing:** Setting up various payment solutions.\n  - **New Age Platforms:** Utilizing cutting-edge technologies for innovative digital solutions.\n  - **Marketing Websites:** Creating visually appealing and strategically structured websites.\n\nFor more details on their services, you can visit [NFN Labs](https://fnlabs.in/). \n\nIf you have any further questions or need assistance with something else, feel free to ask!"
 
 //connecting database
 app.get('/',async(req,res)=>{
@@ -148,12 +158,11 @@ app.post('/chat',async(req,res)=>{
                 }
             }
         }
-       ])
+       ]).toArray()
 
-       let output=[]
-       for await (let i of vectorSearch){
-        output.push(i)
-       }
+        // Concatenate search results for prompt
+        const context = vectorSearch.map(doc => doc.text).join("\n");
+
        const openAi= new OpenAI({
         apiKey:process.env.OPENAI_API_KEY
        })
@@ -167,13 +176,11 @@ app.post('/chat',async(req,res)=>{
             },
             {
                 role:"user",
-                content:`${output.map((doc)=>doc.text+ "\n")}
-                \n
-               from the above context answer the following question: ${message}`
+                content:`Context:\n${context}\n\nAnswer the following question based on the context above:\n${message}`
             }
         ]
        })
-          return res.json(chatResult)
+          return res.json(chatResult.choices[0].message.content)
     }catch(error){
         console.log(error)
     }
@@ -195,3 +202,6 @@ const PORT = process.env.PORT || 5000;
 app.listen(PORT,()=>{
     console.log(`server connected ${PORT}`)
 })
+
+
+//https://medium.com/widle-studio/building-ai-solutions-with-langchain-and-node-js-a-comprehensive-guide-widle-studio-4812753aedff
